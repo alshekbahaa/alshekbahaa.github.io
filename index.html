@@ -3,162 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مهند | story.is-a.shop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <title>مهند الشيخ بهاء | مطور ورائد أعمال</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
-      font-family: 'Tajawal', sans-serif;
-      background: #0a0a0a;
-      color: #fff;
-      overflow-x: hidden;
-    }
-    .hero {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      padding: 20px;
       position: relative;
-      padding: 2rem;
+      overflow-x: hidden;
     }
-    .hero::before {
+    
+    body::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, transparent 70%);
+      width: 500px;
+      height: 500px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      top: -250px;
+      right: -250px;
+      animation: float 20s infinite ease-in-out;
     }
-    .badge {
-      background: rgba(99,102,241,0.2);
-      border: 1px solid rgba(99,102,241,0.4);
-      color: #a5b4fc;
-      padding: 0.4rem 1.2rem;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      margin-bottom: 1.5rem;
-      letter-spacing: 1px;
+    
+    body::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+      bottom: -200px;
+      left: -200px;
+      animation: float 15s infinite ease-in-out reverse;
     }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-      background: linear-gradient(90deg, #fff 0%, #a5b4fc 50%, #818cf8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(10deg); }
     }
-    .hero p {
-      font-size: clamp(1rem, 2.5vw, 1.3rem);
-      color: #9ca3af;
-      max-width: 600px;
-      line-height: 1.8;
-      margin-bottom: 2.5rem;
+    
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 3rem 2.5rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.6s ease;
     }
-    .links {
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .avatar {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .btn {
-      display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.8rem 1.8rem;
-      border-radius: 12px;
-      font-family: 'Tajawal', sans-serif;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      border: 4px solid rgba(255,255,255,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-align: center;
+      color: white;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
       font-size: 1rem;
-      font-weight: 600;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+    
+    .bio {
+      background: rgba(255,255,255,0.1);
+      padding: 1.2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      color: rgba(255,255,255,0.95);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+    
+    .links {
+      display: grid;
+      gap: 0.8rem;
+    }
+    
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255,255,255,0.2);
+      padding: 1rem 1.3rem;
+      border-radius: 15px;
       text-decoration: none;
+      color: white;
+      font-weight: 600;
       transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #6366f1, #818cf8);
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(99,102,241,0.6);
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      color: #d1d5db;
       border: 1px solid rgba(255,255,255,0.1);
     }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
+    
+    .link:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateX(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      max-width: 900px;
-      width: 100%;
-      margin: 4rem auto;
-      padding: 0 1.5rem;
-    }
-    .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 1.8rem;
+    
+    .link i {
+      font-size: 1.3rem;
+      width: 30px;
       text-align: center;
-      transition: all 0.3s ease;
     }
-    .card:hover {
-      background: rgba(99,102,241,0.08);
-      border-color: rgba(99,102,241,0.3);
-      transform: translateY(-4px);
-    }
-    .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: #f3f4f6; }
-    .card p { font-size: 0.9rem; color: #6b7280; line-height: 1.6; }
-    footer {
+    
+    .footer {
+      margin-top: 2rem;
       text-align: center;
-      padding: 2rem;
-      color: #374151;
+      color: rgba(255,255,255,0.7);
       font-size: 0.85rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
     }
-    footer span { color: #6366f1; }
+    
+    @media (max-width: 600px) {
+      .card { padding: 2rem 1.5rem; }
+      h1 { font-size: 1.6rem; }
+      .avatar { width: 100px; height: 100px; font-size: 2.5rem; }
+    }
   </style>
 </head>
 <body>
-  <section class="hero">
-    <div class="badge">story.is-a.shop</div>
-    <h1>مرحباً، أنا مهند</h1>
-    <p>مؤسس منظمة ميثاق الخيرية • رائد أعمال رقمي • متخصص في تقنية المعلومات والأمن السيبراني</p>
+  <div class="card">
+    <div class="avatar">
+      <i class="fas fa-user-astronaut"></i>
+    </div>
+    
+    <h1>مهند الشيخ بهاء</h1>
+    <div class="subtitle">مطور • رائد أعمال رقمي • مؤسس منظمة ميثاق</div>
+    
+    <div class="bio">
+      متخصص في تقنية المعلومات والأمن السيبراني، مؤسس منظمة ميثاق الخيرية لدعم الأرامل والمطلقات، مهتم بالتطوير والابتكار الرقمي.
+    </div>
+    
     <div class="links">
-      <a href="https://salla.sa/pk.2" class="btn btn-primary">🛍️ زيارة المتجر</a>
-      <a href="mailto:" class="btn btn-secondary">✉️ تواصل معي</a>
+      <a href="https://salla.sa/pk.2" class="link">
+        <i class="fas fa-shopping-bag"></i>
+        <span>المتجر الإلكتروني</span>
+      </a>
+      
+      <a href="https://github.com/alshekbahaa" class="link">
+        <i class="fab fa-github"></i>
+        <span>GitHub</span>
+      </a>
+      
+      <a href="mailto:contact@alshekbahaa.is-a.shop" class="link">
+        <i class="fas fa-envelope"></i>
+        <span>تواصل معي</span>
+      </a>
+      
+      <a href="#" class="link">
+        <i class="fas fa-hands-helping"></i>
+        <span>منظمة ميثاق الخيرية</span>
+      </a>
     </div>
-  </section>
-
-  <div class="cards">
-    <div class="card">
-      <div class="card-icon">🏪</div>
-      <h3>المتجر الإلكتروني</h3>
-      <p>منتجات رقمية وخدمات متنوعة على منصة سلة</p>
-    </div>
-    <div class="card">
-      <div class="card-icon">🤲</div>
-      <h3>منظمة ميثاق</h3>
-      <p>منظمة خيرية تُعنى بدعم الأرامل والمطلقات</p>
-    </div>
-    <div class="card">
-      <div class="card-icon">🎯</div>
-      <h3>التدريب والتطوير</h3>
-      <p>برامج تدريبية وبناء القدرات المؤسسية</p>
+    
+    <div class="footer">
+      © 2026 مهند الشيخ بهاء • alshekbahaa.is-a.shop
     </div>
   </div>
-
-  <footer>
-    <p>صُنع بـ ❤️ على <span>GitHub Pages</span> • النطاق <span>story.is-a.shop</span></p>
-  </footer>
 </body>
 </html>
