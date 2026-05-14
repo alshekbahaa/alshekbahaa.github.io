@@ -3,506 +3,572 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="الصفحة الشخصية لبهاء الشيخ - مطور ورائد أعمال رقمي متخصص في تقنية المعلومات والأمن السيبراني.">
-  <meta name="theme-color" content="#136468">
   <title>بهاء الشيخ | مطور ورائد أعمال</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
     :root {
       --primary-teal: #136468;
-      --dark-teal: #082d2f;
+      --dark-teal: #0c4144;
       --gold-accent: #f2b405;
-      --gold-hover: #ffca3a;
-      
-      --glass-bg: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
-      
-      --text-main: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.75);
+      --gold-hover: #d19a00;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, var(--dark-teal) 0%, var(--primary-teal) 100%);
+      background: linear-gradient(135deg, var(--primary-teal) 0%, var(--dark-teal) 100%);
+      color: white;
       min-height: 100vh;
-      overflow: hidden; /* نمنع التمرير العادي لعمل الواجهة المكانية */
-      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* تم استخدام الـ padding بدلاً من justify-content: center للسماح بالتمرير في الجوال */
+      padding: 80px 20px 40px; 
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
-    #cyber-canvas {
+    /* خلفية الجزيئات السيبرانية */
+    #network-canvas {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
       pointer-events: none;
     }
 
-    .spatial-universe {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100vh;
-      perspective: 1500px; /* عمق الشاشة */
+    /* زر تغيير اللغة */
+    .lang-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 600;
+      z-index: 100;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      justify-content: center;
-      z-index: 10;
+      gap: 8px;
     }
 
-    .spatial-view {
-      position: absolute;
+    .lang-btn:hover {
+      background: var(--gold-accent);
+      color: var(--dark-teal);
+      border-color: var(--gold-accent);
+    }
+
+    html[dir="ltr"] .lang-btn { left: auto; right: 20px; }
+
+    /* حاوية الـ 3D */
+    .perspective-wrapper {
       width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.8s;
-      transform-style: preserve-3d;
-      will-change: transform, opacity;
-    }
-
-    /* البطاقة الأساسية - نشطة */
-    #view-main.active {
-      transform: translateZ(0) rotateY(0) translateY(0);
-      opacity: 1;
-      pointer-events: all;
-      filter: blur(0);
-    }
-
-    /* البطاقة الأساسية - غير نشطة (ترجع للخلف في الظلام) */
-    #view-main.inactive {
-      transform: translateZ(-600px) rotateX(10deg) translateY(-50px);
-      opacity: 0;
-      pointer-events: none;
-      filter: blur(5px);
-    }
-
-    /* بطاقة الخدمات - نشطة */
-    #view-services.active {
-      transform: translateZ(0) rotateY(0) translateY(0);
-      opacity: 1;
-      pointer-events: all;
-      filter: blur(0);
-    }
-
-    /* بطاقة الخدمات - غير نشطة (تندفع للأمام خارج الشاشة) */
-    #view-services.inactive {
-      transform: translateZ(600px) rotateX(-10deg) translateY(50px);
-      opacity: 0;
-      pointer-events: none;
-      filter: blur(10px);
+      max-width: 500px;
+      perspective: 1200px;
+      position: relative;
+      margin: 0 auto;
     }
 
     .card {
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 32px;
+      border-radius: 30px;
       padding: 3rem 2.5rem;
-      box-shadow: var(--glass-shadow);
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
       border: 1px solid var(--glass-border);
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      border-left: 1px solid rgba(255, 255, 255, 0.15);
-      position: relative;
+      transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      /* هذا هو سر نجاح التمرير: البطاقة النشطة تأخذ مساحتها الطبيعية */
     }
 
-    .avatar-wrapper {
+    .card.active {
       position: relative;
-      width: 130px; height: 130px;
-      margin: 0 auto 1.5rem;
+      transform: translateZ(0) rotateX(0);
+      opacity: 1;
+      pointer-events: auto;
     }
 
+    .card.inactive {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateZ(-200px) translateY(-50px) rotateX(10deg);
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    /* تصميم الأفاتار الجديد (الرجل بالنظارات) */
     .avatar {
-      width: 100%; height: 100%;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold-accent), var(--gold-hover));
-      display: flex; align-items: center; justify-content: center;
-      color: var(--dark-teal);
-      border: 4px solid rgba(255,255,255,0.1);
-      box-shadow: 0 10px 25px rgba(242, 180, 5, 0.3);
-      position: relative; z-index: 2;
+      margin: 0 auto 1.5rem;
+      /* أزلنا الخلفية اللونية لأن الصورة تحتوي على خلفية ذهبية بالفعل */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid rgba(255,255,255,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 0 20px rgba(255,255,255,0.5);
+      position: relative;
+      overflow: hidden; /* ضروري لقص أطراف الصورة لتصبح دائرية */
     }
 
-    .avatar-wrapper::before {
-      content: ''; position: absolute;
-      top: -5px; left: -5px; right: -5px; bottom: -5px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold-accent), transparent);
-      z-index: 1; animation: spinPulse 4s linear infinite; opacity: 0.5;
-    }
-
-    @keyframes spinPulse {
-      0% { transform: rotate(0deg) scale(1); opacity: 0.3; }
-      50% { transform: rotate(180deg) scale(1.05); opacity: 0.6; }
-      100% { transform: rotate(360deg) scale(1); opacity: 0.3; }
+    /* تنسيق الصورة الجديدة */
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* يضمن ملء الدائرة بالصورة بدون تشويه (مهم جداً للصور المستطيلة) */
+      object-position: center; /* التركيز على منتصف الصورة */
     }
 
     .name-container {
-      display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 0.5rem;
     }
+
+    /* ضبط اتجاه أيقونة التوثيق */
     html[dir="rtl"] .name-container { flex-direction: row-reverse; }
+    html[dir="ltr"] .name-container { flex-direction: row; }
 
-    h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
-    .verified-badge { color: #38bdf8; font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.4)); }
-    .subtitle { text-align: center; color: var(--gold-accent); font-size: 1rem; margin-bottom: 1.5rem; font-weight: 600; }
-    
+    h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .verified-badge {
+      color: #1da1f2;
+      background: white;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
     .bio {
-      background: rgba(0, 0, 0, 0.2); padding: 1.2rem 1.5rem;
-      border-radius: 20px; margin-bottom: 2.5rem;
-      color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.08);
+      padding: 1.2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      color: rgba(255,255,255,0.95);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .links { display: flex; flex-direction: column; gap: 1rem; }
-    
+    .links {
+      display: grid;
+      gap: 1rem;
+    }
+
     .link {
-      display: flex; align-items: center; gap: 1rem;
-      background: rgba(255,255,255,0.05); padding: 1.1rem 1.5rem;
-      border-radius: 18px; text-decoration: none; color: var(--text-main);
-      font-weight: 600; font-size: 1.05rem;
-      border: 1px solid var(--glass-border);
-      position: relative; overflow: hidden;
-      /* تأثير الحركة يتم برمجيا عبر الجافاسكربت للتأثير المغناطيسي */
-      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-      will-change: transform;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255,255,255,0.12);
+      padding: 1rem 1.3rem;
+      border-radius: 15px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s, border-color 0.3s;
+      cursor: pointer;
     }
 
-    .link:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--gold-accent); color: var(--gold-accent);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2), inset 0 0 15px rgba(242, 180, 5, 0.1);
+    /* تأثير المغناطيس يعمل على الشاشات الكبيرة فقط */
+    @media (hover: hover) {
+      .link:hover {
+        background: rgba(255,255,255,0.2);
+        border-color: var(--gold-accent);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      }
+      .link:hover .icon-box {
+        background: var(--gold-accent);
+        color: var(--dark-teal);
+        transform: scale(1.1) rotate(5deg);
+      }
     }
 
-    .link-icon {
-      font-size: 1.4rem; width: 35px; height: 35px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.1); border-radius: 10px; transition: all 0.3s ease;
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
     }
 
-    .link:hover .link-icon {
-      background: var(--gold-accent); color: var(--dark-teal); transform: rotate(-5deg);
+    .magic-icon {
+      animation: float-magic 2s infinite ease-in-out;
+      color: var(--gold-accent);
     }
 
-    #view-services .card { max-width: 850px; width: 90vw; max-height: 90vh; overflow-y: auto; }
-    
-    .view-header {
-      display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; position: relative;
+    @keyframes float-magic {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-3px) rotate(10deg); text-shadow: 0 0 10px var(--gold-accent); }
+    }
+
+    /* قسم الخدمات الجديد */
+    .services-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .back-btn {
-      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;
-      width: 45px; height: 45px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    html[dir="ltr"] .back-btn { right: auto; left: 0; }
-    .back-btn:hover { background: var(--gold-accent); color: var(--dark-teal); border-color: var(--gold-accent); }
-
-    .playful-icon { color: var(--gold-accent); font-size: 2.2rem; animation: bouncyMagic 2s infinite cubic-bezier(0.28, 0.84, 0.42, 1); }
-    @keyframes bouncyMagic {
-      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-      25% { transform: translateY(-10px) rotate(-15deg) scale(1.1); filter: drop-shadow(0 0 10px var(--gold-accent)); }
-      50% { transform: translateY(0) rotate(5deg) scale(1); }
-      75% { transform: translateY(-5px) rotate(-5deg) scale(1.05); }
-    }
-
-    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
     
-    .service-item {
-      background: rgba(0, 0, 0, 0.2); border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 24px; padding: 2.5rem 1.5rem; text-align: center; transition: all 0.4s ease;
-      position: relative; overflow: hidden; cursor: pointer;
-    }
-    .service-item:hover {
-      transform: translateY(-10px); border-color: var(--gold-accent); background: rgba(255, 255, 255, 0.05);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    }
-    .service-icon { font-size: 3rem; color: rgba(255,255,255,0.5); margin-bottom: 1.5rem; transition: all 0.4s; }
-    .service-item:hover .service-icon { color: var(--gold-accent); transform: scale(1.3) rotate(5deg); }
-    .service-item h3 { font-size: 1.3rem; margin-bottom: 0.8rem; font-weight: 700; }
-    .service-item p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .back-btn:hover { background: var(--gold-accent); color: var(--dark-teal); }
+    html[dir="rtl"] .back-btn i { transform: scaleX(-1); }
 
-    .lang-btn {
-      position: fixed; top: 25px; left: 25px;
-      background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
-      color: var(--text-main); padding: 10px 20px; border-radius: 30px; cursor: pointer;
-      font-family: 'Cairo', sans-serif; font-weight: 700; z-index: 100;
-      display: flex; align-items: center; gap: 10px; transition: all 0.3s ease;
+    .service-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
     }
-    html[dir="ltr"] .lang-btn { left: auto; right: 25px; }
-    .lang-btn:hover { background: var(--gold-accent); color: var(--dark-teal); }
-    
-    .footer { margin-top: 2.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+
+    .service-box:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--gold-accent);
+      transform: translateY(-5px);
+    }
+
+    .service-box i {
+      font-size: 2.5rem;
+      color: var(--gold-accent);
+      margin-bottom: 1rem;
+    }
+
+    .service-box h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .service-box p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+    }
 
     @media (max-width: 600px) {
-      .card { padding: 2.5rem 1.5rem; }
-      h1 { font-size: 1.5rem; }
-      .avatar-wrapper { width: 110px; height: 110px; }
-      .lang-btn { top: 15px; left: 15px; padding: 8px 16px; font-size: 0.9rem; }
-      html[dir="ltr"] .lang-btn { right: 15px; left: auto; }
-      #view-services .card { padding: 2rem 1.2rem; }
-      .view-header h2 { font-size: 1.5rem; }
+      .card { padding: 2rem 1.5rem; }
+      h1 { font-size: 1.6rem; }
+      .avatar { width: 110px; height: 110px; }
+      body { padding-top: 70px; } /* مساحة للزر في الأعلى */
     }
   </style>
 </head>
 <body>
-  <canvas id="cyber-canvas"></canvas>
+  
+  <!-- خلفية الجزيئات المترابطة -->
+  <canvas id="network-canvas"></canvas>
 
-  <button class="lang-btn magnetic" onclick="toggleLanguage()" aria-label="Toggle Language">
+  <button class="lang-btn magnetic" onclick="toggleLanguage()">
     <i class="fas fa-globe"></i>
     <span id="lang-text">English</span>
   </button>
 
-  <main class="spatial-universe">
+  <div class="perspective-wrapper">
     
-    <!-- الصفحة الأولى (الرئيسية) -->
-    <section id="view-main" class="spatial-view active">
-      <div class="card">
-        <div class="avatar-wrapper">
-          <div class="avatar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="75" height="75">
-              <rect x="27" y="30" width="10" height="10" fill="currentColor"/>
-              <path d="M32 36c-14.3 0-25 8.2-25 22v6h50v-6c0-13.8-10.7-22-25-22z" fill="currentColor"/>
-              <path d="M19 38 L32 50 L45 38 L40 34 L32 42 L24 34 Z" fill="#ffffff" opacity="0.95"/>
-              <polygon points="29,42 35,42 34,46 30,46" fill="var(--gold-accent)"/>
-              <polygon points="30,47 34,47 32,64" fill="var(--gold-accent)"/>
-              <circle cx="32" cy="18" r="14" fill="currentColor"/>
-              <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="18" y="14" width="11" height="8" rx="2.5" fill="rgba(255,255,255,0.15)"/>
-                <rect x="35" y="14" width="11" height="8" rx="2.5" fill="rgba(255,255,255,0.15)"/>
-                <path d="M29 18h6" />
-                <path d="M13 16l5 1 M51 16l-5 1" />
-              </g>
-            </svg>
-          </div>
-        </div>
-        
-        <div class="name-container">
-          <h1 data-i18n="name">بهاء الشيخ</h1>
-          <i class="fas fa-check-circle verified-badge" title="Verified"></i>
-        </div>
-        
-        <div class="subtitle" data-i18n="subtitle">مطور • رائد أعمال رقمي</div>
-        
-        <div class="bio" data-i18n="bio">
-          متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي.
-        </div>
-        
-        <div class="links">
-          <a href="#" class="link magnetic" onclick="navigateSpatial('view-services')" aria-label="Our Services">
-            <div class="link-icon"><i class="fas fa-briefcase"></i></div>
-            <span data-i18n="services">خدماتنا الإبداعية</span>
-          </a>
-
-          <a href="https://salla.sa/pk.2" class="link magnetic" target="_blank" rel="noopener noreferrer">
-            <div class="link-icon"><i class="fas fa-store"></i></div>
-            <span data-i18n="store">المتجر الإلكتروني</span>
-          </a>
-          
-          <a href="https://github.com/alshekbahaa" class="link magnetic" target="_blank" rel="noopener noreferrer">
-            <div class="link-icon"><i class="fab fa-github"></i></div>
-            <span>GitHub</span>
-          </a>
-          
-          <a href="https://t.me/alshekbahaa" class="link magnetic" target="_blank" rel="noopener noreferrer">
-            <div class="link-icon"><i class="fab fa-telegram-plane"></i></div>
-            <span data-i18n="telegram">قناتي على تيليجرام</span>
-          </a>
-
-          <a href="mailto:contact@alshekbahaa.is-a.shop" class="link magnetic">
-            <div class="link-icon"><i class="fas fa-envelope"></i></div>
-            <span data-i18n="contact">تواصل معي</span>
-          </a>
-        </div>
-        
-        <footer class="footer" data-i18n="footer">
-          © 2026 بهاء الشيخ • alshekbahaa
-        </footer>
+    <!-- البطاقة الرئيسية -->
+    <div class="card active" id="main-card">
+      <div class="avatar">
+        <!-- تم استبدال الـ SVG بصورتك -->
+        <img src="0001.png" alt="بهاء الشيخ" class="profile-img">
       </div>
-    </section>
-
-    <section id="view-services" class="spatial-view inactive">
-      <div class="card">
-        <div class="view-header">
-          <button class="back-btn magnetic" onclick="navigateSpatial('view-main')" aria-label="Back">
-            <i class="fas fa-arrow-right"></i>
-          </button>
-          <i class="fas fa-wand-magic-sparkles playful-icon"></i>
-          <h2 data-i18n="services_title" style="font-size: 1.8rem; font-weight: 800;">خدماتنا الإبداعية</h2>
+      
+      <div class="name-container">
+        <h1 data-i18n="name">بهاء الشيخ</h1>
+        <i class="fas fa-check-circle verified-badge" title="موثق"></i>
+      </div>
+      
+      <div class="subtitle" data-i18n="subtitle">مطور • رائد أعمال رقمي</div>
+      
+      <div class="bio" data-i18n="bio">
+        متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي.
+      </div>
+      
+      <div class="links">
+        <div class="link magnetic" onclick="toggleServices()">
+          <div class="icon-box"><i class="fas fa-magic magic-icon"></i></div>
+          <span data-i18n="services_btn">خدماتنا الإبداعية</span>
         </div>
+
+        <a href="https://salla.sa/pk.2" class="link magnetic" target="_blank" rel="noopener noreferrer">
+          <div class="icon-box"><i class="fas fa-shopping-bag"></i></div>
+          <span data-i18n="store">المتجر الإلكتروني</span>
+        </a>
         
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;" data-i18n="services_desc">
-          اختر إحدى الخدمات أدناه لنبدأ العمل معاً!
-        </p>
+        <a href="https://github.com/alshekbahaa" class="link magnetic" target="_blank" rel="noopener noreferrer">
+          <div class="icon-box"><i class="fab fa-github"></i></div>
+          <span>GitHub</span>
+        </a>
         
-        <div class="services-grid">
-          <div class="service-item magnetic">
-            <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
-            <h3 data-i18n="srv1_title">أمن سيبراني</h3>
-            <p data-i18n="srv1_desc">حماية الانظمة والبيانات من الاختراقات بأحدث المعايير.</p>
-          </div>
-          
-          <div class="service-item magnetic">
-            <div class="service-icon"><i class="fas fa-laptop-code"></i></div>
-            <h3 data-i18n="srv2_title">برمجة وتطوير</h3>
-            <p data-i18n="srv2_desc">بناء تطبيقات ويب وأنظمة مخصصة سريعة وآمنة.</p>
-          </div>
-          
-          <div class="service-item magnetic">
-            <div class="service-icon"><i class="fas fa-lightbulb"></i></div>
-            <h3 data-i18n="srv3_title">استشارات تقنية</h3>
-            <p data-i18n="srv3_desc">توجيه وحلول استراتيجية لتطوير أعمالك رقمياً.</p>
-          </div>
+        <a href="https://t.me/alshekbahaa" class="link magnetic" target="_blank" rel="noopener noreferrer">
+          <div class="icon-box"><i class="fab fa-telegram-plane"></i></div>
+          <span>Telegram</span>
+        </a>
+        
+        <a href="mailto:contact@alshekbahaa.is-a.shop" class="link magnetic">
+          <div class="icon-box"><i class="fas fa-envelope"></i></div>
+          <span data-i18n="contact">تواصل معي</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- بطاقة الخدمات -->
+    <div class="card inactive" id="services-card">
+      <div class="services-header">
+        <h2 data-i18n="services_title" style="color: var(--gold-accent); font-weight: 900;">خدماتنا الإبداعية</h2>
+        <button class="back-btn magnetic" onclick="toggleServices()" aria-label="Back">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-box magnetic">
+          <i class="fas fa-shield-alt"></i>
+          <h3 data-i18n="srv1_title">الأمن السيبراني</h3>
+          <p data-i18n="srv1_desc">حماية الأنظمة والشبكات والبيانات الحساسة من الهجمات الرقمية.</p>
+        </div>
+
+        <div class="service-box magnetic">
+          <i class="fas fa-laptop-code"></i>
+          <h3 data-i18n="srv2_title">تطوير البرمجيات</h3>
+          <p data-i18n="srv2_desc">بناء وتطوير تطبيقات الويب والهواتف الذكية بأحدث التقنيات.</p>
+        </div>
+
+        <div class="service-box magnetic">
+          <i class="fas fa-lightbulb"></i>
+          <h3 data-i18n="srv3_title">الاستشارات الرقمية</h3>
+          <p data-i18n="srv3_desc">توجيه استراتيجي وحلول تقنية لنجاح مشاريعك وتحويلها لواقع.</p>
         </div>
       </div>
-    </section>
+    </div>
 
-  </main>
+  </div>
+
+  <div class="footer" data-i18n="footer">
+    © 2026 بهاء الشيخ • alshekbahaa
+  </div>
 
   <script>
-    // 1. نظام الترجمة (i18n)
+    /* --- الترجمة (i18n) --- */
     const translations = {
       ar: {
-        name: "بهاء الشيخ", subtitle: "مطور • رائد أعمال رقمي",
+        name: "بهاء الشيخ",
+        subtitle: "مطور • رائد أعمال رقمي",
         bio: "متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي.",
-        services: "خدماتنا الإبداعية", store: "المتجر الإلكتروني", telegram: "قناتي على تيليجرام", contact: "تواصل معي",
-        footer: "© 2026 بهاء الشيخ • alshekbahaa", langBtn: "English",
-        services_title: "خدماتنا الإبداعية", services_desc: "اختر إحدى الخدمات أدناه لنبدأ العمل معاً!",
-        srv1_title: "أمن سيبراني", srv1_desc: "حماية الانظمة والبيانات من الاختراقات بأحدث المعايير.",
-        srv2_title: "برمجة وتطوير", srv2_desc: "بناء تطبيقات ويب وأنظمة مخصصة سريعة وآمنة.",
-        srv3_title: "استشارات تقنية", srv3_desc: "توجيه وحلول استراتيجية لتطوير أعمالك رقمياً."
+        services_btn: "خدماتنا الإبداعية",
+        store: "المتجر الإلكتروني",
+        contact: "تواصل معي",
+        footer: "© 2026 بهاء الشيخ • alshekbahaa",
+        langBtn: "English",
+        services_title: "خدماتنا الإبداعية",
+        srv1_title: "الأمن السيبراني",
+        srv1_desc: "حماية الأنظمة والشبكات والبيانات الحساسة من الهجمات الرقمية.",
+        srv2_title: "تطوير البرمجيات",
+        srv2_desc: "بناء وتطوير تطبيقات الويب والهواتف الذكية بأحدث التقنيات.",
+        srv3_title: "الاستشارات الرقمية",
+        srv3_desc: "توجيه استراتيجي وحلول تقنية لنجاح مشاريعك وتحويلها لواقع."
       },
       en: {
-        name: "Bahaa Alshek", subtitle: "Developer • Digital Entrepreneur",
-        bio: "IT & Cybersecurity Specialist, passionate about digital innovation.",
-        services: "Creative Services", store: "Online Store", telegram: "Telegram Channel", contact: "Contact Me",
-        footer: "© 2026 Bahaa Alshek • alshekbahaa", langBtn: "عربي",
-        services_title: "Creative Services", services_desc: "Choose a service below to start working together!",
-        srv1_title: "Cybersecurity", srv1_desc: "Protecting systems and data with the highest standards.",
-        srv2_title: "Web Development", srv2_desc: "Building fast, secure custom web applications.",
-        srv3_title: "Tech Consulting", srv3_desc: "Strategic guidance to evolve your business digitally."
+        name: "Bahaa Alshek",
+        subtitle: "Developer • Digital Entrepreneur",
+        bio: "IT & Cybersecurity Specialist, passionate about digital development and innovation.",
+        services_btn: "Creative Services",
+        store: "Online Store",
+        contact: "Contact Me",
+        footer: "© 2026 Bahaa Alshek • alshekbahaa",
+        langBtn: "عربي",
+        services_title: "Creative Services",
+        srv1_title: "Cybersecurity",
+        srv1_desc: "Protecting systems, networks, and sensitive data from digital attacks.",
+        srv2_title: "Software Dev",
+        srv2_desc: "Building web and mobile applications using modern technologies.",
+        srv3_title: "Digital Consulting",
+        srv3_desc: "Strategic guidance and tech solutions to turn your projects into reality."
       }
     };
 
-    let currentLang = localStorage.getItem('prefLang') || 'ar';
-    applyLang(currentLang);
+    let currentLang = localStorage.getItem('lang') || 'ar';
+    applyLanguage(currentLang);
 
     function toggleLanguage() {
       currentLang = currentLang === 'ar' ? 'en' : 'ar';
-      localStorage.setItem('prefLang', currentLang);
-      applyLang(currentLang);
+      localStorage.setItem('lang', currentLang);
+      applyLanguage(currentLang);
     }
 
-    function applyLang(lang) {
+    function applyLanguage(lang) {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      
       document.querySelectorAll('[data-i18n]').forEach(el => {
-        el.innerText = translations[lang][el.getAttribute('data-i18n')];
+        const key = el.getAttribute('data-i18n');
+        el.innerText = translations[lang][key];
       });
       document.getElementById('lang-text').innerText = translations[lang].langBtn;
-      // عكس أيقونة السهم عند تغيير اللغة
-      const backIcon = document.querySelector('.back-btn i');
-      if(backIcon) {
-          backIcon.className = lang === 'ar' ? 'fas fa-arrow-right' : 'fas fa-arrow-left';
+    }
+
+    /* --- التبديل بين البطاقات (3D Spatial Effect) --- */
+    function toggleServices() {
+      const mainCard = document.getElementById('main-card');
+      const srvCard = document.getElementById('services-card');
+      
+      if (mainCard.classList.contains('active')) {
+        mainCard.classList.remove('active');
+        mainCard.classList.add('inactive');
+        srvCard.classList.remove('inactive');
+        srvCard.classList.add('active');
+      } else {
+        srvCard.classList.remove('active');
+        srvCard.classList.add('inactive');
+        mainCard.classList.remove('inactive');
+        mainCard.classList.add('active');
       }
+      // العودة لأعلى الصفحة عند تبديل البطاقة
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 2. نظام التنقل المكاني الثلاثي الأبعاد
-    function navigateSpatial(targetId) {
-      // إخفاء كل الواجهات
-      document.querySelectorAll('.spatial-view').forEach(view => {
-        view.classList.remove('active');
-        view.classList.add('inactive');
-      });
-      // إظهار الواجهة المطلوبة
-      const targetView = document.getElementById(targetId);
-      targetView.classList.remove('inactive');
-      targetView.classList.add('active');
-    }
-
-    // 3. تأثير الأزرار المغناطيسية (Magnetic Hover)
-    // عند تقريب الماوس، يتحرك الزر برقة نحو المؤشر
-    const magneticElements = document.querySelectorAll('.magnetic');
-    
-    magneticElements.forEach(elem => {
-      elem.addEventListener('mousemove', (e) => {
-        const rect = elem.getBoundingClientRect();
-        // حساب المسافة من مركز الزر
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        
-        // تحريك الزر بنسبة خفيفة جدا نحو الماوس
-        elem.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.02)`;
-      });
-      
-      elem.addEventListener('mouseleave', () => {
-        // العودة للوضع الطبيعي بمرونة
-        elem.style.transform = `translate(0px, 0px) scale(1)`;
-      });
-    });
-
-    // 4. نظام جزيئات الأمن السيبراني في الخلفية (Canvas Particles)
-    const canvas = document.getElementById('cyber-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particles;
-
-    function initCanvas() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      particles = [];
-      const particleCount = window.innerWidth < 600 ? 30 : 60; // تقليل العدد في الجوال للأداء
-      
-      for(let i=0; i<particleCount; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          size: Math.random() * 2 + 1
+    /* --- تأثير الأزرار المغناطيسية (تعمل فقط على الكمبيوتر) --- */
+    if (window.matchMedia("(hover: hover)").matches) {
+      const magnetics = document.querySelectorAll('.magnetic');
+      magnetics.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
         });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate(0px, 0px)';
+        });
+      });
+    }
+
+    /* --- خلفية الجزيئات المترابطة (Cyber Network) --- */
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 1.5 + 0.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(242, 180, 5, 0.5)'; // اللون الذهبي
+        ctx.fill();
       }
     }
 
-    function drawParticles() {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(242, 180, 5, 0.5)'; // اللون الذهبي
+    function initParticles() {
+      particles = [];
+      const numParticles = window.innerWidth < 600 ? 30 : 70; // جزيئات أقل في الجوال للأداء
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
+    }
+    initParticles();
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      particles.forEach((p, index) => {
-        p.x += p.vx; p.y += p.vy;
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
         
-        // إعادة الجزيئات إذا خرجت من الشاشة
-        if(p.x < 0 || p.x > width) p.vx *= -1;
-        if(p.y < 0 || p.y > height) p.vy *= -1;
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // رسم خطوط بين الجزيئات المتقاربة (تأثير الشبكة)
-        for(let j = index + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+        for (let j = i; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if(dist < 100) {
+          if (distance < 120) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(242, 180, 5, ${1 - dist/100})`;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distance/1200})`;
             ctx.lineWidth = 0.5;
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
           }
         }
-      });
-      requestAnimationFrame(drawParticles);
+      }
+      requestAnimationFrame(animateParticles);
     }
-
-    window.addEventListener('resize', initCanvas);
-    initCanvas();
-    drawParticles();
-
+    animateParticles();
   </script>
 </body>
 </html>
