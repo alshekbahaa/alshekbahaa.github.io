@@ -7,7 +7,6 @@
   <meta name="theme-color" content="#136468">
   <title>بهاء الشيخ | مطور ورائد أعمال</title>
   
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -15,143 +14,124 @@
   
   <style>
     :root {
-      /* Color Palette */
       --primary-teal: #136468;
       --dark-teal: #082d2f;
       --gold-accent: #f2b405;
       --gold-hover: #ffca3a;
       
-      /* Glassmorphism Variables */
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
       
-      /* Typography */
       --text-main: #ffffff;
       --text-muted: rgba(255, 255, 255, 0.75);
     }
 
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body {
       font-family: 'Cairo', sans-serif;
       background: linear-gradient(135deg, var(--dark-teal) 0%, var(--primary-teal) 100%);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
+      overflow: hidden; /* نمنع التمرير العادي لعمل الواجهة المكانية */
       color: var(--text-main);
     }
 
-    /* تأثيرات إضاءة الخلفية المتقدمة */
-    body::before, body::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
+    #cyber-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
       z-index: 0;
-      opacity: 0.6;
-    }
-    
-    body::before {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, var(--gold-accent) 0%, transparent 70%);
-      top: -100px;
-      right: -100px;
-      animation: drift 25s infinite ease-in-out alternate;
-    }
-    
-    body::after {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, #00d2ff 0%, transparent 70%);
-      bottom: -150px;
-      left: -150px;
-      animation: drift 30s infinite ease-in-out alternate-reverse;
-      opacity: 0.3;
-    }
-    
-    @keyframes drift {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-50px, 50px) scale(1.1); }
+      pointer-events: none;
     }
 
-    .card-container {
-      position: relative;
+    .spatial-universe {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100vh;
+      perspective: 1500px; /* عمق الشاشة */
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 10;
+    }
+
+    .spatial-view {
+      position: absolute;
       width: 100%;
       max-width: 480px;
-      perspective: 1000px;
+      padding: 20px;
+      transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.8s;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+    }
+
+    /* البطاقة الأساسية - نشطة */
+    #view-main.active {
+      transform: translateZ(0) rotateY(0) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+      filter: blur(0);
+    }
+
+    /* البطاقة الأساسية - غير نشطة (ترجع للخلف في الظلام) */
+    #view-main.inactive {
+      transform: translateZ(-600px) rotateX(10deg) translateY(-50px);
+      opacity: 0;
+      pointer-events: none;
+      filter: blur(5px);
+    }
+
+    /* بطاقة الخدمات - نشطة */
+    #view-services.active {
+      transform: translateZ(0) rotateY(0) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+      filter: blur(0);
+    }
+
+    /* بطاقة الخدمات - غير نشطة (تندفع للأمام خارج الشاشة) */
+    #view-services.inactive {
+      transform: translateZ(600px) rotateX(-10deg) translateY(50px);
+      opacity: 0;
+      pointer-events: none;
+      filter: blur(10px);
     }
 
     .card {
       background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: 32px;
       padding: 3rem 2.5rem;
       box-shadow: var(--glass-shadow);
       border: 1px solid var(--glass-border);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      border-left: 1px solid rgba(255, 255, 255, 0.2);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      animation: cardEntrance 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    
-    .card.lang-transitioning {
-      opacity: 0;
-      transform: scale(0.98);
-    }
-
-    @keyframes cardEntrance {
-      to { opacity: 1; transform: translateY(0); }
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
     }
 
     .avatar-wrapper {
       position: relative;
-      width: 130px;
-      height: 130px;
+      width: 130px; height: 130px;
       margin: 0 auto 1.5rem;
     }
 
     .avatar {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--gold-accent), var(--gold-hover));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3.5rem;
+      display: flex; align-items: center; justify-content: center;
       color: var(--dark-teal);
-      border: 4px solid var(--glass-border);
-      box-shadow: 0 10px 25px rgba(242, 180, 5, 0.4);
-      position: relative;
-      z-index: 2;
-      transition: transform 0.3s ease;
+      border: 4px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 25px rgba(242, 180, 5, 0.3);
+      position: relative; z-index: 2;
     }
 
-    /* نبض حول الصورة */
     .avatar-wrapper::before {
-      content: '';
-      position: absolute;
+      content: ''; position: absolute;
       top: -5px; left: -5px; right: -5px; bottom: -5px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--gold-accent), transparent);
-      z-index: 1;
-      animation: spinPulse 4s linear infinite;
-      opacity: 0.5;
+      z-index: 1; animation: spinPulse 4s linear infinite; opacity: 0.5;
     }
 
     @keyframes spinPulse {
@@ -161,570 +141,368 @@
     }
 
     .name-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 0.5rem;
+      display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 0.5rem;
     }
+    html[dir="rtl"] .name-container { flex-direction: row-reverse; }
 
-    /* جعل علامة التوثيق على يمين الاسم في النسخة العربية */
-    html[dir="rtl"] .name-container {
-      flex-direction: row-reverse;
-    }
-
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      letter-spacing: -0.5px;
-    }
-
-    .verified-badge {
-      color: #38bdf8;
-      font-size: 1.2rem;
-      filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.4));
-    }
-
-    .subtitle {
-      text-align: center;
-      color: var(--gold-accent);
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+    h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+    .verified-badge { color: #38bdf8; font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.4)); }
+    .subtitle { text-align: center; color: var(--gold-accent); font-size: 1rem; margin-bottom: 1.5rem; font-weight: 600; }
     
     .bio {
-      background: rgba(0, 0, 0, 0.15);
-      padding: 1.2rem 1.5rem;
-      border-radius: 20px;
-      margin-bottom: 2.5rem;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.8;
-      text-align: center;
+      background: rgba(0, 0, 0, 0.2); padding: 1.2rem 1.5rem;
+      border-radius: 20px; margin-bottom: 2.5rem;
+      color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+    .links { display: flex; flex-direction: column; gap: 1rem; }
     
     .link {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: var(--glass-bg);
-      padding: 1.1rem 1.5rem;
-      border-radius: 18px;
-      text-decoration: none;
-      color: var(--text-main);
-      font-weight: 600;
-      font-size: 1.05rem;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,0.05); padding: 1.1rem 1.5rem;
+      border-radius: 18px; text-decoration: none; color: var(--text-main);
+      font-weight: 600; font-size: 1.05rem;
       border: 1px solid var(--glass-border);
-      position: relative;
-      overflow: hidden;
-      /* إعدادات حركة الدخول المتسلسلة */
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.5s ease forwards;
-    }
-
-    /* تدرج التأخير في الظهور */
-    .link:nth-child(1) { animation-delay: 0.4s; }
-    .link:nth-child(2) { animation-delay: 0.5s; }
-    .link:nth-child(3) { animation-delay: 0.6s; }
-    .link:nth-child(4) { animation-delay: 0.7s; }
-
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* تأثير اللمعان عند التمرير */
-    .link::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
-      transform: skewX(-25deg);
-      transition: left 0.5s ease;
-    }
-
-    .link:hover::before {
-      left: 200%;
+      position: relative; overflow: hidden;
+      /* تأثير الحركة يتم برمجيا عبر الجافاسكربت للتأثير المغناطيسي */
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      will-change: transform;
     }
 
     .link:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateY(-3px) scale(1.02);
-      border-color: var(--gold-accent);
-      color: var(--gold-accent);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 0 15px rgba(242, 180, 5, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--gold-accent); color: var(--gold-accent);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2), inset 0 0 15px rgba(242, 180, 5, 0.1);
     }
 
     .link-icon {
-      font-size: 1.4rem;
-      width: 35px;
-      height: 35px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      transition: all 0.3s ease;
+      font-size: 1.4rem; width: 35px; height: 35px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.1); border-radius: 10px; transition: all 0.3s ease;
     }
 
     .link:hover .link-icon {
-      background: var(--gold-accent);
-      color: var(--dark-teal);
-      transform: rotate(-5deg);
+      background: var(--gold-accent); color: var(--dark-teal); transform: rotate(-5deg);
     }
 
-    .lang-btn {
-      position: fixed;
-      top: 25px;
-      left: 25px;
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      color: var(--text-main);
-      padding: 10px 20px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-family: 'Cairo', sans-serif;
-      font-weight: 700;
-      z-index: 100;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    #view-services .card { max-width: 850px; width: 90vw; max-height: 90vh; overflow-y: auto; }
+    
+    .view-header {
+      display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; position: relative;
     }
 
-    .lang-btn:hover {
-      background: var(--gold-accent);
-      color: var(--dark-teal);
-      transform: translateY(-2px);
-      border-color: var(--gold-accent);
+    .back-btn {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;
+      width: 45px; height: 45px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
     }
+    html[dir="ltr"] .back-btn { right: auto; left: 0; }
+    .back-btn:hover { background: var(--gold-accent); color: var(--dark-teal); border-color: var(--gold-accent); }
 
-    html[dir="ltr"] .lang-btn {
-      left: auto;
-      right: 25px;
-    }
-
-    /* ======== تصميم نافذة الخدمات المنبثقة ======== */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(8, 45, 47, 0.85);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.4s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal-content {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 32px;
-      padding: 3rem;
-      width: 90%;
-      max-width: 850px;
-      transform: translateY(50px) scale(0.95);
-      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-      box-shadow: var(--glass-shadow);
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-overlay.active .modal-content {
-      transform: translateY(0) scale(1);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      width: 45px; height: 45px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    html[dir="ltr"] .close-btn { right: auto; left: 20px; }
-
-    .close-btn:hover {
-      background: #ef4444; /* لون أحمر عند الإغلاق */
-      transform: rotate(90deg);
-      border-color: #ef4444;
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 10px;
-    }
-
-    .modal-header h2 {
-      font-size: 2.2rem;
-      color: white;
-      font-weight: 900;
-      text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-
-    /* الأيقونة الطريفة والمتحركة (عصا سحرية ترقص) */
-    .playful-icon {
-      color: var(--gold-accent);
-      font-size: 2.5rem;
-      animation: bouncyMagic 2s infinite cubic-bezier(0.28, 0.84, 0.42, 1);
-    }
-
+    .playful-icon { color: var(--gold-accent); font-size: 2.2rem; animation: bouncyMagic 2s infinite cubic-bezier(0.28, 0.84, 0.42, 1); }
     @keyframes bouncyMagic {
       0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-      25% { transform: translateY(-15px) rotate(-20deg) scale(1.1); filter: drop-shadow(0 0 15px var(--gold-accent)); }
-      50% { transform: translateY(0) rotate(10deg) scale(1); }
-      75% { transform: translateY(-8px) rotate(-10deg) scale(1.05); }
+      25% { transform: translateY(-10px) rotate(-15deg) scale(1.1); filter: drop-shadow(0 0 10px var(--gold-accent)); }
+      50% { transform: translateY(0) rotate(5deg) scale(1); }
+      75% { transform: translateY(-5px) rotate(-5deg) scale(1.05); }
     }
 
-    .modal-desc {
-      text-align: center;
-      color: var(--text-muted);
-      margin-bottom: 2.5rem;
-      font-size: 1.05rem;
-    }
-
-    /* الـ 3 مربعات (البطاقات) */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    
     .service-item {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 24px;
-      padding: 2.5rem 1.5rem;
-      text-align: center;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
+      background: rgba(0, 0, 0, 0.2); border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 24px; padding: 2.5rem 1.5rem; text-align: center; transition: all 0.4s ease;
+      position: relative; overflow: hidden; cursor: pointer;
     }
-
-    /* تأثير إضاءة خلفية عند التمرير */
-    .service-item::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, transparent, rgba(242, 180, 5, 0.15), transparent);
-      transform: translateY(100%);
-      transition: transform 0.4s ease;
-    }
-
     .service-item:hover {
-      transform: translateY(-10px);
-      border-color: var(--gold-accent);
-      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-10px); border-color: var(--gold-accent); background: rgba(255, 255, 255, 0.05);
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
     }
+    .service-icon { font-size: 3rem; color: rgba(255,255,255,0.5); margin-bottom: 1.5rem; transition: all 0.4s; }
+    .service-item:hover .service-icon { color: var(--gold-accent); transform: scale(1.3) rotate(5deg); }
+    .service-item h3 { font-size: 1.3rem; margin-bottom: 0.8rem; font-weight: 700; }
+    .service-item p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
 
-    .service-item:hover::before { transform: translateY(0); }
-
-    .service-icon {
-      font-size: 3rem;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 1.5rem;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    .lang-btn {
+      position: fixed; top: 25px; left: 25px;
+      background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
+      color: var(--text-main); padding: 10px 20px; border-radius: 30px; cursor: pointer;
+      font-family: 'Cairo', sans-serif; font-weight: 700; z-index: 100;
+      display: flex; align-items: center; gap: 10px; transition: all 0.3s ease;
     }
-
-    .service-item:hover .service-icon {
-      color: var(--gold-accent);
-      transform: scale(1.3) rotate(5deg);
-    }
-
-    .service-item h3 {
-      color: white;
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
-      font-weight: 700;
-    }
-
-    .service-item p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
+    html[dir="ltr"] .lang-btn { left: auto; right: 25px; }
+    .lang-btn:hover { background: var(--gold-accent); color: var(--dark-teal); }
+    
+    .footer { margin-top: 2.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
 
     @media (max-width: 600px) {
-      .modal-content { padding: 2rem 1.5rem; }
-      .modal-header h2 { font-size: 1.8rem; }
-      .playful-icon { font-size: 2rem; }
-    }
-
-    .footer {
-      margin-top: 2.5rem;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 400;
-      opacity: 0;
-      animation: fadeUp 0.5s ease 0.9s forwards;
-    }
-
-    @media (max-width: 480px) {
-      .card { padding: 2.5rem 1.5rem; border-radius: 24px; }
+      .card { padding: 2.5rem 1.5rem; }
       h1 { font-size: 1.5rem; }
       .avatar-wrapper { width: 110px; height: 110px; }
       .lang-btn { top: 15px; left: 15px; padding: 8px 16px; font-size: 0.9rem; }
       html[dir="ltr"] .lang-btn { right: 15px; left: auto; }
+      #view-services .card { padding: 2rem 1.2rem; }
+      .view-header h2 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
-  
-  <button class="lang-btn" onclick="toggleLanguage()" aria-label="Toggle Language">
+  <canvas id="cyber-canvas"></canvas>
+
+  <button class="lang-btn magnetic" onclick="toggleLanguage()" aria-label="Toggle Language">
     <i class="fas fa-globe"></i>
     <span id="lang-text">English</span>
   </button>
 
-  <main class="card-container">
-    <div class="card" id="main-card">
-      
-      <div class="avatar-wrapper">
-        <div class="avatar">
-          <!-- أيقونة فيكتور (SVG) مخصصة واحترافية -->
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="75" height="75">
-            <!-- الرقبة -->
-            <rect x="27" y="30" width="10" height="10" fill="currentColor"/>
-            <!-- البدلة / الجسم -->
-            <path d="M32 36c-14.3 0-25 8.2-25 22v6h50v-6c0-13.8-10.7-22-25-22z" fill="currentColor"/>
-            <!-- ياقة القميص -->
-            <path d="M19 38 L32 50 L45 38 L40 34 L32 42 L24 34 Z" fill="#ffffff" opacity="0.95"/>
-            <!-- عقدة ربطة العنق -->
-            <polygon points="29,42 35,42 34,46 30,46" fill="var(--gold-accent)"/>
-            <!-- جسم ربطة العنق -->
-            <polygon points="30,47 34,47 32,64" fill="var(--gold-accent)"/>
-            <!-- الرأس -->
-            <circle cx="32" cy="18" r="14" fill="currentColor"/>
-            
-            <!-- النظارات -->
-            <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <!-- العدسات مع انعكاس زجاجي خفيف -->
-              <rect x="18" y="14" width="11" height="8" rx="2.5" fill="rgba(255,255,255,0.15)"/>
-              <rect x="35" y="14" width="11" height="8" rx="2.5" fill="rgba(255,255,255,0.15)"/>
-              <!-- جسر النظارة -->
-              <path d="M29 18h6" />
-              <!-- أذرع النظارة -->
-              <path d="M13 16l5 1 M51 16l-5 1" />
-            </g>
-          </svg>
+  <main class="spatial-universe">
+    
+    <!-- الصفحة الأولى (الرئيسية) -->
+    <section id="view-main" class="spatial-view active">
+      <div class="card">
+        <div class="avatar-wrapper">
+          <div class="avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="75" height="75">
+              <rect x="27" y="30" width="10" height="10" fill="currentColor"/>
+              <path d="M32 36c-14.3 0-25 8.2-25 22v6h50v-6c0-13.8-10.7-22-25-22z" fill="currentColor"/>
+              <path d="M19 38 L32 50 L45 38 L40 34 L32 42 L24 34 Z" fill="#ffffff" opacity="0.95"/>
+              <polygon points="29,42 35,42 34,46 30,46" fill="var(--gold-accent)"/>
+              <polygon points="30,47 34,47 32,64" fill="var(--gold-accent)"/>
+              <circle cx="32" cy="18" r="14" fill="currentColor"/>
+              <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="18" y="14" width="11" height="8" rx="2.5" fill="rgba(255,255,255,0.15)"/>
+                <rect x="35" y="14" width="11" height="8" rx="2.5" fill="rgba(255,255,255,0.15)"/>
+                <path d="M29 18h6" />
+                <path d="M13 16l5 1 M51 16l-5 1" />
+              </g>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="name-container">
+          <h1 data-i18n="name">بهاء الشيخ</h1>
+          <i class="fas fa-check-circle verified-badge" title="Verified"></i>
+        </div>
+        
+        <div class="subtitle" data-i18n="subtitle">مطور • رائد أعمال رقمي</div>
+        
+        <div class="bio" data-i18n="bio">
+          متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي.
+        </div>
+        
+        <div class="links">
+          <a href="#" class="link magnetic" onclick="navigateSpatial('view-services')" aria-label="Our Services">
+            <div class="link-icon"><i class="fas fa-briefcase"></i></div>
+            <span data-i18n="services">خدماتنا الإبداعية</span>
+          </a>
+
+          <a href="https://salla.sa/pk.2" class="link magnetic" target="_blank" rel="noopener noreferrer">
+            <div class="link-icon"><i class="fas fa-store"></i></div>
+            <span data-i18n="store">المتجر الإلكتروني</span>
+          </a>
+          
+          <a href="https://github.com/alshekbahaa" class="link magnetic" target="_blank" rel="noopener noreferrer">
+            <div class="link-icon"><i class="fab fa-github"></i></div>
+            <span>GitHub</span>
+          </a>
+          
+          <a href="https://t.me/alshekbahaa" class="link magnetic" target="_blank" rel="noopener noreferrer">
+            <div class="link-icon"><i class="fab fa-telegram-plane"></i></div>
+            <span data-i18n="telegram">قناتي على تيليجرام</span>
+          </a>
+
+          <a href="mailto:contact@alshekbahaa.is-a.shop" class="link magnetic">
+            <div class="link-icon"><i class="fas fa-envelope"></i></div>
+            <span data-i18n="contact">تواصل معي</span>
+          </a>
+        </div>
+        
+        <footer class="footer" data-i18n="footer">
+          © 2026 بهاء الشيخ • alshekbahaa
+        </footer>
+      </div>
+    </section>
+
+    <section id="view-services" class="spatial-view inactive">
+      <div class="card">
+        <div class="view-header">
+          <button class="back-btn magnetic" onclick="navigateSpatial('view-main')" aria-label="Back">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+          <i class="fas fa-wand-magic-sparkles playful-icon"></i>
+          <h2 data-i18n="services_title" style="font-size: 1.8rem; font-weight: 800;">خدماتنا الإبداعية</h2>
+        </div>
+        
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;" data-i18n="services_desc">
+          اختر إحدى الخدمات أدناه لنبدأ العمل معاً!
+        </p>
+        
+        <div class="services-grid">
+          <div class="service-item magnetic">
+            <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3 data-i18n="srv1_title">أمن سيبراني</h3>
+            <p data-i18n="srv1_desc">حماية الانظمة والبيانات من الاختراقات بأحدث المعايير.</p>
+          </div>
+          
+          <div class="service-item magnetic">
+            <div class="service-icon"><i class="fas fa-laptop-code"></i></div>
+            <h3 data-i18n="srv2_title">برمجة وتطوير</h3>
+            <p data-i18n="srv2_desc">بناء تطبيقات ويب وأنظمة مخصصة سريعة وآمنة.</p>
+          </div>
+          
+          <div class="service-item magnetic">
+            <div class="service-icon"><i class="fas fa-lightbulb"></i></div>
+            <h3 data-i18n="srv3_title">استشارات تقنية</h3>
+            <p data-i18n="srv3_desc">توجيه وحلول استراتيجية لتطوير أعمالك رقمياً.</p>
+          </div>
         </div>
       </div>
-      
-      <div class="name-container">
-        <h1 data-i18n="name">بهاء الشيخ</h1>
-        <i class="fas fa-check-circle verified-badge" title="Verified"></i>
-      </div>
-      
-      <div class="subtitle" data-i18n="subtitle">مطور • رائد أعمال رقمي</div>
-      
-      <div class="bio" data-i18n="bio">
-        متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي وبناء الحلول الذكية.
-      </div>
-      
-      <div class="links">
-        <a href="#" class="link" onclick="openServices(event)" aria-label="Our Services">
-          <div class="link-icon"><i class="fas fa-briefcase"></i></div>
-          <span data-i18n="services">خدماتنا</span>
-        </a>
+    </section>
 
-        <a href="https://salla.sa/pk.2" class="link" target="_blank" rel="noopener noreferrer" aria-label="Online Store">
-          <div class="link-icon"><i class="fas fa-store"></i></div>
-          <span data-i18n="store">المتجر الإلكتروني</span>
-        </a>
-        
-        <a href="https://github.com/alshekbahaa" class="link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
-          <div class="link-icon"><i class="fab fa-github"></i></div>
-          <span>GitHub</span>
-        </a>
-        
-        <a href="https://t.me/alshekbahaa" class="link" target="_blank" rel="noopener noreferrer" aria-label="Telegram Channel">
-          <div class="link-icon"><i class="fab fa-telegram-plane"></i></div>
-          <span data-i18n="telegram">قناتي على تيليجرام</span>
-        </a>
-
-        <a href="mailto:contact@alshekbahaa.is-a.shop" class="link" aria-label="Send Email">
-          <div class="link-icon"><i class="fas fa-envelope"></i></div>
-          <span data-i18n="contact">تواصل معي</span>
-        </a>
-      </div>
-      
-      <footer class="footer" data-i18n="footer">
-        © 2026 بهاء الشيخ • alshekbahaa
-      </footer>
-      
-    </div>
   </main>
 
-  <!-- ================= نافذة الخدمات المنبثقة ================= -->
-  <div id="services-modal" class="modal-overlay">
-    <div class="modal-content">
-      <!-- زر الإغلاق -->
-      <button class="close-btn" onclick="closeServices()" aria-label="Close">
-        <i class="fas fa-times"></i>
-      </button>
-      
-      <div class="modal-header">
-        <i class="fas fa-wand-magic-sparkles playful-icon"></i>
-        <h2 data-i18n="services_title">خدماتنا الإبداعية</h2>
-      </div>
-      
-      <p class="modal-desc" data-i18n="services_desc">اختر إحدى الخدمات أدناه لنبدأ العمل معاً، (في انتظار تفاصيلك لإضافتها!)</p>
-      
-      <div class="services-grid">
-        <!-- المربع 1 -->
-        <div class="service-item">
-          <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
-          <h3 data-i18n="service_1">الخدمة الأولى</h3>
-          <p data-i18n="service_wait">في انتظار تفاصيل الخدمة لإضافتها هنا...</p>
-        </div>
-        
-        <!-- المربع 2 -->
-        <div class="service-item">
-          <div class="service-icon"><i class="fas fa-code"></i></div>
-          <h3 data-i18n="service_2">الخدمة الثانية</h3>
-          <p data-i18n="service_wait">في انتظار تفاصيل الخدمة لإضافتها هنا...</p>
-        </div>
-        
-        <!-- المربع 3 -->
-        <div class="service-item">
-          <div class="service-icon"><i class="fas fa-chart-line"></i></div>
-          <h3 data-i18n="service_3">الخدمة الثالثة</h3>
-          <p data-i18n="service_wait">في انتظار تفاصيل الخدمة لإضافتها هنا...</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
+    // 1. نظام الترجمة (i18n)
     const translations = {
       ar: {
-        name: "بهاء الشيخ",
-        subtitle: "مطور • رائد أعمال رقمي",
-        bio: "متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي وبناء الحلول الذكية.",
-        services: "خدماتنا",
-        services_title: "خدماتنا الإبداعية",
-        services_desc: "اختر إحدى الخدمات أدناه لنبدأ العمل معاً، (في انتظار تفاصيلك لإضافتها!)",
-        service_1: "الخدمة الأولى",
-        service_2: "الخدمة الثانية",
-        service_3: "الخدمة الثالثة",
-        service_wait: "في انتظار تفاصيل الخدمة لإضافتها هنا...",
-        store: "المتجر الإلكتروني",
-        telegram: "قناتي على تيليجرام",
-        contact: "تواصل معي",
-        footer: "© 2026 بهاء الشيخ • alshekbahaa",
-        langBtn: "English"
+        name: "بهاء الشيخ", subtitle: "مطور • رائد أعمال رقمي",
+        bio: "متخصص في تقنية المعلومات والأمن السيبراني، مهتم بالتطوير والابتكار الرقمي.",
+        services: "خدماتنا الإبداعية", store: "المتجر الإلكتروني", telegram: "قناتي على تيليجرام", contact: "تواصل معي",
+        footer: "© 2026 بهاء الشيخ • alshekbahaa", langBtn: "English",
+        services_title: "خدماتنا الإبداعية", services_desc: "اختر إحدى الخدمات أدناه لنبدأ العمل معاً!",
+        srv1_title: "أمن سيبراني", srv1_desc: "حماية الانظمة والبيانات من الاختراقات بأحدث المعايير.",
+        srv2_title: "برمجة وتطوير", srv2_desc: "بناء تطبيقات ويب وأنظمة مخصصة سريعة وآمنة.",
+        srv3_title: "استشارات تقنية", srv3_desc: "توجيه وحلول استراتيجية لتطوير أعمالك رقمياً."
       },
       en: {
-        name: "Bahaa Alshek",
-        subtitle: "Developer • Digital Entrepreneur",
-        bio: "IT & Cybersecurity Specialist, passionate about digital innovation and building smart solutions.",
-        services: "Our Services",
-        services_title: "Creative Services",
-        services_desc: "Choose a service below to start working together (Waiting for your details!)",
-        service_1: "First Service",
-        service_2: "Second Service",
-        service_3: "Third Service",
-        service_wait: "Waiting for service details to be added here...",
-        store: "Online Store",
-        telegram: "Telegram Channel",
-        contact: "Contact Me",
-        footer: "© 2026 Bahaa Alshek • alshekbahaa",
-        langBtn: "عربي"
+        name: "Bahaa Alshek", subtitle: "Developer • Digital Entrepreneur",
+        bio: "IT & Cybersecurity Specialist, passionate about digital innovation.",
+        services: "Creative Services", store: "Online Store", telegram: "Telegram Channel", contact: "Contact Me",
+        footer: "© 2026 Bahaa Alshek • alshekbahaa", langBtn: "عربي",
+        services_title: "Creative Services", services_desc: "Choose a service below to start working together!",
+        srv1_title: "Cybersecurity", srv1_desc: "Protecting systems and data with the highest standards.",
+        srv2_title: "Web Development", srv2_desc: "Building fast, secure custom web applications.",
+        srv3_title: "Tech Consulting", srv3_desc: "Strategic guidance to evolve your business digitally."
       }
     };
 
-    // جلب اللغة المحفوظة مسبقاً من المتصفح أو تعيين العربية كافتراضي
-    let currentLang = localStorage.getItem('preferredLang') || 'ar';
-    const cardElement = document.getElementById('main-card');
-
-    // تطبيق اللغة فور تحميل الصفحة
-    applyLanguage(currentLang, false);
+    let currentLang = localStorage.getItem('prefLang') || 'ar';
+    applyLang(currentLang);
 
     function toggleLanguage() {
-      // تحديد اللغة الجديدة
       currentLang = currentLang === 'ar' ? 'en' : 'ar';
-      
-      // حفظ التفضيل في المتصفح
-      localStorage.setItem('preferredLang', currentLang);
-      
-      // إضافة تأثير الاختفاء التدريجي
-      cardElement.classList.add('lang-transitioning');
-      
-      // تغيير النصوص والاتجاهات بعد منتصف الحركة (200ms)
-      setTimeout(() => {
-        applyLanguage(currentLang, true);
-        
-        // إزالة تأثير الاختفاء لتظهر البطاقة بالنصوص الجديدة
-        cardElement.classList.remove('lang-transitioning');
-      }, 200);
+      localStorage.setItem('prefLang', currentLang);
+      applyLang(currentLang);
     }
 
-    function applyLanguage(lang, isTransitioning) {
+    function applyLang(lang) {
       document.documentElement.lang = lang;
       document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-      
       document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        el.innerText = translations[lang][key];
+        el.innerText = translations[lang][el.getAttribute('data-i18n')];
       });
-
       document.getElementById('lang-text').innerText = translations[lang].langBtn;
-    }
-
-    // دوال التحكم في نافذة الخدمات
-    function openServices(event) {
-      if(event) event.preventDefault(); // منع الصفحة من القفز للأعلى عند الضغط
-      const modal = document.getElementById('services-modal');
-      modal.classList.add('active');
-    }
-
-    function closeServices() {
-      const modal = document.getElementById('services-modal');
-      modal.classList.remove('active');
-    }
-
-    // إغلاق النافذة عند الضغط في الفراغ خارجها
-    document.getElementById('services-modal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeServices();
+      // عكس أيقونة السهم عند تغيير اللغة
+      const backIcon = document.querySelector('.back-btn i');
+      if(backIcon) {
+          backIcon.className = lang === 'ar' ? 'fas fa-arrow-right' : 'fas fa-arrow-left';
       }
+    }
+
+    // 2. نظام التنقل المكاني الثلاثي الأبعاد
+    function navigateSpatial(targetId) {
+      // إخفاء كل الواجهات
+      document.querySelectorAll('.spatial-view').forEach(view => {
+        view.classList.remove('active');
+        view.classList.add('inactive');
+      });
+      // إظهار الواجهة المطلوبة
+      const targetView = document.getElementById(targetId);
+      targetView.classList.remove('inactive');
+      targetView.classList.add('active');
+    }
+
+    // 3. تأثير الأزرار المغناطيسية (Magnetic Hover)
+    // عند تقريب الماوس، يتحرك الزر برقة نحو المؤشر
+    const magneticElements = document.querySelectorAll('.magnetic');
+    
+    magneticElements.forEach(elem => {
+      elem.addEventListener('mousemove', (e) => {
+        const rect = elem.getBoundingClientRect();
+        // حساب المسافة من مركز الزر
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        // تحريك الزر بنسبة خفيفة جدا نحو الماوس
+        elem.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.02)`;
+      });
+      
+      elem.addEventListener('mouseleave', () => {
+        // العودة للوضع الطبيعي بمرونة
+        elem.style.transform = `translate(0px, 0px) scale(1)`;
+      });
     });
+
+    // 4. نظام جزيئات الأمن السيبراني في الخلفية (Canvas Particles)
+    const canvas = document.getElementById('cyber-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles;
+
+    function initCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      particles = [];
+      const particleCount = window.innerWidth < 600 ? 30 : 60; // تقليل العدد في الجوال للأداء
+      
+      for(let i=0; i<particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(242, 180, 5, 0.5)'; // اللون الذهبي
+      
+      particles.forEach((p, index) => {
+        p.x += p.vx; p.y += p.vy;
+        
+        // إعادة الجزيئات إذا خرجت من الشاشة
+        if(p.x < 0 || p.x > width) p.vx *= -1;
+        if(p.y < 0 || p.y > height) p.vy *= -1;
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // رسم خطوط بين الجزيئات المتقاربة (تأثير الشبكة)
+        for(let j = index + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          
+          if(dist < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(242, 180, 5, ${1 - dist/100})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+    drawParticles();
+
   </script>
 </body>
 </html>
