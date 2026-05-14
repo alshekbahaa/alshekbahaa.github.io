@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
     body {
       font-family: 'Cairo', sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +20,7 @@
       position: relative;
       overflow-x: hidden;
     }
-    
+
     body::before {
       content: '';
       position: absolute;
@@ -32,7 +32,7 @@
       right: -250px;
       animation: float 20s infinite ease-in-out;
     }
-    
+
     body::after {
       content: '';
       position: absolute;
@@ -44,12 +44,12 @@
       left: -200px;
       animation: float 15s infinite ease-in-out reverse;
     }
-    
+
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-30px) rotate(10deg); }
     }
-    
+
     .card {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(20px);
@@ -63,27 +63,27 @@
       z-index: 1;
       animation: slideUp 0.6s ease;
     }
-    
+
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     .avatar {
       width: 130px;
       height: 130px;
       border-radius: 50%;
       margin: 0 auto 1.5rem;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, #2CA5E0, #1a8fc7);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3rem;
+      font-size: 3.5rem;
       color: white;
       border: 4px solid rgba(255,255,255,0.3);
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    
+
     h1 {
       font-size: 2rem;
       font-weight: 900;
@@ -92,7 +92,7 @@
       margin-bottom: 0.5rem;
       text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
-    
+
     .subtitle {
       text-align: center;
       color: rgba(255,255,255,0.9);
@@ -100,7 +100,7 @@
       margin-bottom: 2rem;
       font-weight: 300;
     }
-    
+
     .bio {
       background: rgba(255,255,255,0.1);
       padding: 1.2rem;
@@ -111,12 +111,12 @@
       line-height: 1.7;
       text-align: center;
     }
-    
+
     .links {
       display: grid;
       gap: 0.8rem;
     }
-    
+
     .link {
       display: flex;
       align-items: center;
@@ -130,26 +130,26 @@
       transition: all 0.3s ease;
       border: 1px solid rgba(255,255,255,0.1);
     }
-    
+
     .link:hover {
       background: rgba(255,255,255,0.3);
       transform: translateX(-5px);
       box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
-    
+
     .link i {
       font-size: 1.3rem;
       width: 30px;
       text-align: center;
     }
-    
+
     .footer {
       margin-top: 2rem;
       text-align: center;
       color: rgba(255,255,255,0.7);
       font-size: 0.85rem;
     }
-    
+
     @media (max-width: 600px) {
       .card { padding: 2rem 1.5rem; }
       h1 { font-size: 1.6rem; }
@@ -160,40 +160,40 @@
 <body>
   <div class="card">
     <div class="avatar">
-      <i class="fas fa-user-astronaut"></i>
+      <i class="fab fa-telegram"></i>
     </div>
-    
+
     <h1>مهند الشيخ بهاء</h1>
-    <div class="subtitle">مطور • رائد أعمال رقمي • مؤسس منظمة ميثاق</div>
-    
+    <p class="subtitle">مطور • رائد أعمال رقمي • مؤسس منظمة ميثاق</p>
+
     <div class="bio">
       متخصص في تقنية المعلومات والأمن السيبراني، مؤسس منظمة ميثاق الخيرية لدعم الأرامل والمطلقات، مهتم بالتطوير والابتكار الرقمي.
     </div>
-    
+
     <div class="links">
       <a href="https://salla.sa/pk.2" class="link">
-        <i class="fas fa-shopping-bag"></i>
+        <i class="fas fa-store"></i>
         <span>المتجر الإلكتروني</span>
       </a>
-      
+
       <a href="https://github.com/alshekbahaa" class="link">
         <i class="fab fa-github"></i>
         <span>GitHub</span>
       </a>
-      
+
       <a href="mailto:contact@alshekbahaa.is-a.shop" class="link">
         <i class="fas fa-envelope"></i>
         <span>تواصل معي</span>
       </a>
-      
-      <a href="#" class="link">
-        <i class="fas fa-hands-helping"></i>
-        <span>منظمة ميثاق الخيرية</span>
+
+      <a href="https://t.me/alshekbahaa" class="link">
+        <i class="fab fa-telegram"></i>
+        <span>تيليجرام</span>
       </a>
     </div>
-    
+
     <div class="footer">
-      © 2026 مهند الشيخ بهاء • alshekbahaa.is-a.shop
+      &copy; 2026 مهند الشيخ بهاء &bull; alshekbahaa.is-a.shop
     </div>
   </div>
 </body>
